@@ -1,4 +1,3 @@
 const api    = require('./api.route');
-module.exports = {
-    api
-}
+
+module.exports = {api};

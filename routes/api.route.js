@@ -1,12 +1,10 @@
-const express = require('express')
-const router = express.Router()
-
-
+const express = require('express');
+const router = express.Router();
 
 
 //test route
 router.get("/test",(req,res) => {
-    res.send("test")
+    res.send("test");
 });
 
 
