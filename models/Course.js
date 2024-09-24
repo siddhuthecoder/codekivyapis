@@ -8,7 +8,9 @@ const courseSchema = new mongoose.Schema({
     cost: { type: Number, required: true },
     duration: { type: String, required: true },
     rating: { type: Number },
-    courseId: { type: String, unique: true },  
+    courseId: { type: String, unique: true }, 
+    numberOfStudentsEnrolled: { type: Number, default: 0 },
+    imageString:{type:String}
 }, { timestamps: true });
 
 // Generate a custom courseId before saving

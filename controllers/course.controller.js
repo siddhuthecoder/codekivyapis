@@ -1,12 +1,12 @@
-const Course = require('../models/Course');  // Assuming you have a Course model
-const Student = require('../models/Student');  // Assuming you have a Student model
+const Course = require('../models/Course'); 
+const Student = require('../models/Student');  
 const { ErrorValidation, SuccessValidation } = require('../utils/helpers');
 
 // Create a new course
 const createCourse = async (req, res) => {
-    const { name, description, pdfUrl, cost, duration, rating } = req.body;
+    const { name, description, pdfUrl, cost, duration, rating,imageString } = req.body;
     try {
-        const newCourse = new Course({ name, description, pdfUrl, cost, duration, rating });
+        const newCourse = new Course({ name, description, pdfUrl, cost, duration, rating,imageString });
         await newCourse.save();
         SuccessValidation(req, res, { message: 'Course created successfully', course: newCourse }, 201);
     } catch (err) {
@@ -17,7 +17,7 @@ const createCourse = async (req, res) => {
 // Get all courses
 const getAllCourses = async (req, res) => {
     try {
-        const courses = await Course.find();  // Assuming you have a soft delete
+        const courses = await Course.find();  
         SuccessValidation(req, res, courses);
     } catch (err) {
         ErrorValidation(req, res, err);
@@ -41,8 +41,7 @@ const getCourseById = async (req, res) => {
 // Update a course
 const updateCourse = async (req, res) => {
     const courseId = req.params.id;
-    const { name, description, pdfUrl, cost, duration, rating } = req.body;
-    console.log(courseId);
+    const { name, description, pdfUrl, cost, duration, rating,imageString } = req.body;
     try {
         const course = await Course.findOne({courseId});
         if (!course) {
@@ -55,6 +54,7 @@ const updateCourse = async (req, res) => {
         course.cost = cost || course.cost;
         course.duration = duration || course.duration;
         course.rating = rating || course.rating;
+        course.imageString = imageString || course.imageString;
 
         await course.save();
         SuccessValidation(req, res, { message: 'Course updated successfully', course });
@@ -65,10 +65,9 @@ const updateCourse = async (req, res) => {
 
 //Delete course
 const deleteCourse = async (req, res) => {
-    const courseId  = req.params.id;  // Use courseId from the request params
+    const courseId  = req.params.id;  
 
     try {
-        // Find and delete the course by the custom courseId field
         const course = await Course.findOneAndDelete({ courseId });
         
         if (!course) {
@@ -85,29 +84,31 @@ const deleteCourse = async (req, res) => {
 
 // Register a student to a course
 const registerStudentToCourse = async (req, res) => {
-    const { name, studentClass, year, branch, phone, email, college,course_name,courseId } = req.body;
+    const { name, studentClass, year, branch, phone, email, college ,courseId } = req.body;
 
     try {
         const course = await Course.findOne({courseId});
         if (!course) {
             return res.status(404).json({ message: 'Course not found' });
         }
-
+        const course_name = course.name;
         const newStudent = new Student({
             name, studentClass, year, branch, phone, email, college, course_name,courseId
         });
-
+        
+        course.numberOfStudentsEnrolled += 1;
+        await course.save();
         await newStudent.save();
+
         SuccessValidation(req, res, { message: 'Student registered successfully', student: newStudent });
+
     } catch (err) {
         ErrorValidation(req, res, err);
     }
 };
 
-
 const getStudentsByCourseId = async (req, res) => {
     const { courseId } = req.params;
-    console.log(courseId)
     try {
         // Fetch students based on the custom courseId
         const students = await Student.find({ courseId });
