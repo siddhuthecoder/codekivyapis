@@ -3,14 +3,15 @@ const { ErrorValidation, SuccessValidation } = require('../utils/helpers');
 
 // Handle contact form submission
 const submitContactForm = async (req, res) => {
-    const { name, email, message } = req.body;
+    const { name, email, message,subject } = req.body;
 
-    if (!name || !email || !message) {
+    if (!name || !email || !message  || !subject) {
+
         return res.status(400).json({ message: 'Name, email, and message are required.' });
     }
 
     try {
-        const newContact = new Contact({ name, email, message });
+        const newContact = new Contact({ name, email, message, subject });
         await newContact.save();
         SuccessValidation(req, res, { message: 'Contact form submitted successfully', contact: newContact }, 201);
     } catch (err) {

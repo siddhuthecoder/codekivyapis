@@ -10,11 +10,14 @@ const SuccessValidation = (req,res, data, statusCode = 200) => {
     res.status(statusCode).json({ success: true, data });
 };
 
-const generateJwtToken = (admin) => {
-    return jwt.sign({ id: admin._id, email: admin.email, role: admin.role }, process.env.JWT_SECRET, {
-        expiresIn: '1h'
-    });
+const generateJwtToken = (account) => {
+    return jwt.sign(
+        { id: account._id, email: account.email, role: account.role || 'user' },  // Default role to 'user' if not present
+        process.env.JWT_SECRET,
+        { expiresIn: '1h' }
+    );
 };
+
 
 module.exports = {
     ErrorValidation,

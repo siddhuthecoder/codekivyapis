@@ -84,7 +84,7 @@ const deleteCourse = async (req, res) => {
 
 // Register a student to a course
 const registerStudentToCourse = async (req, res) => {
-    const { name, studentClass, year, branch, phone, email, college ,courseId } = req.body;
+    const { name, studentClass, year, branch, phone, email, college ,courseId,WaNumber,imageString } = req.body;
 
     try {
         const course = await Course.findOne({courseId});
@@ -93,7 +93,7 @@ const registerStudentToCourse = async (req, res) => {
         }
         const course_name = course.name;
         const newStudent = new Student({
-            name, studentClass, year, branch, phone, email, college, course_name,courseId
+            name, studentClass, year, branch, phone, email, college, course_name,courseId,WaNumber,imageString
         });
         
         course.numberOfStudentsEnrolled += 1;
@@ -112,9 +112,6 @@ const getStudentsByCourseId = async (req, res) => {
     try {
         // Fetch students based on the custom courseId
         const students = await Student.find({ courseId });
-        if (!students || students.length === 0) {
-            return res.status(404).json({ message: 'No students found for this course' });
-        }
 
         SuccessValidation(req, res, students);
     } catch (err) {

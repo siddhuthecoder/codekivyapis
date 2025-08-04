@@ -11,6 +11,7 @@ const adminRoutes = require('./routes/admin.route');
 const courseRoutes = require('./routes/course.route');
 const contactRoutes = require('./routes/contact.route');
 const notificationRoutes = require('./routes/notification.route');
+const userRoutes = require('./routes/user.route');
 
 const {PORT,MONGO_URI} = process.env;
 
@@ -22,6 +23,7 @@ app.use("/api/admin", adminRoutes );
 app.use("/api/course",courseRoutes);
 app.use("/api/contact",contactRoutes);
 app.use("/api/notification",notificationRoutes);
+app.use("/api/user",userRoutes);
 
 mongoose.connect(MONGO_URI)
     .then(() => console.log('MongoDB connected'))
